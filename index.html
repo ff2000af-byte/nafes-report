@@ -244,6 +244,30 @@
       margin-top:6px;
     }
 
+    /* NEW: evidence images grid */
+    .evidence-grid{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:10px;
+      margin-top:10px;
+    }
+    .evidence-img{
+      width:100%;
+      height:160px;
+      object-fit:cover;
+      border:1px solid var(--border);
+      border-radius:10px;
+      background:#fff;
+    }
+    .evidence-link{
+      display:inline-block;
+      direction:ltr;
+      unicode-bidi: plaintext;
+      color:#1d4ed8;
+      text-decoration:underline;
+      font-weight:800;
+    }
+
     /* Critique */
     .critique-section{
       border:2px solid var(--red-accent);
@@ -295,7 +319,6 @@
 
     /* Page break helpers */
     .avoid-break{page-break-inside:avoid;break-inside:avoid}
-    .page-break{page-break-before:always;break-before:page}
 
     /* Print */
     @media print{
@@ -418,12 +441,25 @@
       </div>
     </div>
 
-    <!-- 4 الشواهد -->
+    <!-- 4 الشواهد (جديد: رفع صور + رابط) -->
     <div class="section-header avoid-break">رابعاً: الشواهد (توثيق العمل)</div>
-    <div class="evidence-box avoid-break">
-      (مساحة للصق صور من نماذج الاختبارات، تذاكر العبور، أو صور السبورة)
+
+    <div class="analysis-box avoid-break" style="margin-bottom:10px;">
+      <span class="analysis-label">📷 رفع الشواهد (حتى 4 صور):</span>
+      <input id="evidenceImages" type="file" accept="image/*" multiple />
+      <div class="hint">مسموح حتى 4 صور. الأفضل صور واضحة وصغيرة الحجم.</div>
     </div>
-    <div class="hint avoid-break">عدد الشواهد المرفقة: ☐ 1 ☐ 2 ☐ 3 ☐ أكثر</div>
+
+    <div class="analysis-box avoid-break" style="margin-bottom:10px;">
+      <span class="analysis-label">🔗 رابط شاهد (اختياري):</span>
+      <input id="evidenceLink" type="text" placeholder="ضع رابط الشاهد هنا (Drive/Forms/YouTube/...)" />
+      <div class="hint">سيظهر الرابط داخل التقرير ويمكن فتحه.</div>
+    </div>
+
+    <div id="evidencePreview" class="avoid-break">
+      <div class="evidence-box">(بعد رفع الصور ستظهر هنا داخل التقرير)</div>
+    </div>
+    <div id="evidenceLinkPreview" class="hint avoid-break" style="margin-top:8px;"></div>
 
     <!-- 5 النقد -->
     <div class="critique-section">
@@ -496,6 +532,54 @@
       autoGrow(t);
       t.addEventListener("input", ()=>autoGrow(t));
     });
+
+    // ===== Evidence (Images + Link) =====
+    let evidenceDataUrls = []; // for PDF export
+    const imgInput = document.getElementById("evidenceImages");
+    const linkInput = document.getElementById("evidenceLink");
+    const preview = document.getElementById("evidencePreview");
+    const linkPreview = document.getElementById("evidenceLinkPreview");
+
+    function renderEvidencePreview(){
+      // images
+      if (!evidenceDataUrls.length) {
+        preview.innerHTML = `<div class="evidence-box">(بعد رفع الصور ستظهر هنا داخل التقرير)</div>`;
+      } else {
+        const imgsHtml = evidenceDataUrls.map(u => `<img class="evidence-img" src="${u}" alt="شاهد" />`).join("");
+        preview.innerHTML = `<div class="evidence-grid">${imgsHtml}</div>`;
+      }
+
+      // link
+      const url = (linkInput.value || "").trim();
+      if (url) {
+        linkPreview.innerHTML = `رابط الشاهد: <a class="evidence-link" href="${url}" target="_blank" rel="noopener">${url}</a>`;
+      } else {
+        linkPreview.innerHTML = "";
+      }
+    }
+
+    if (imgInput) {
+      imgInput.addEventListener("change", async (e) => {
+        const files = Array.from(e.target.files || []).slice(0, 4); // max 4
+        evidenceDataUrls = [];
+
+        for (const f of files) {
+          const dataUrl = await new Promise((res, rej) => {
+            const r = new FileReader();
+            r.onload = () => res(r.result);
+            r.onerror = rej;
+            r.readAsDataURL(f);
+          });
+          evidenceDataUrls.push(dataUrl);
+        }
+        renderEvidencePreview();
+      });
+    }
+
+    if (linkInput) {
+      linkInput.addEventListener("input", () => renderEvidencePreview());
+    }
+    renderEvidencePreview();
 
     // Create static clone for PERFECT pdf (inputs/checkboxes -> text)
     function createStaticCloneForPDF(){
