@@ -2,68 +2,89 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>تقرير نافس الأسبوعي</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>التقرير الأسبوعي الشامل - نافس 662</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-body{
-font-family:'Cairo',sans-serif;
-background:#f1f5f9;
-padding:20px;
+:root{
+--primary:#0f172a;
+--gold:#f59e0b;
+--red:#b91c1c;
+--green:#15803d;
+--border:#cbd5e1;
 }
-.box{
-background:white;
-max-width:800px;
-margin:auto;
-padding:20px;
-border-radius:8px;
-}
-input, textarea{
-width:100%;
-margin:6px 0;
-padding:6px;
-}
-button{
-background:#0f172a;
-color:white;
-border:none;
-padding:10px 20px;
-cursor:pointer;
-}
+body{font-family:'Cairo',sans-serif;background:#f1f5f9;margin:0;padding:20px;color:#334155;}
+.page-container{max-width:210mm;margin:auto;background:white;padding:25px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.1);}
+.header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--gold);padding-bottom:10px;margin-bottom:20px;}
+.header h1{margin:0;font-size:22px;font-weight:900;color:var(--primary);}
+.badge{background:var(--primary);color:var(--gold);padding:6px 14px;border-radius:50px;font-size:12px;font-weight:bold;}
+.section-header{background:#e2e8f0;padding:6px 10px;margin:15px 0 8px;font-weight:700;font-size:14px;border-right:4px solid var(--primary);}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th,td{border:1px solid var(--border);padding:8px;}
+th{background:var(--primary);color:white;width:20%;}
+input, textarea{width:100%;border:none;background:transparent;font-family:'Cairo';font-size:13px;outline:none;}
+textarea{resize:none;height:60px;border-bottom:1px dashed #94a3b8;}
+button{margin-top:20px;background:var(--primary);color:white;border:none;padding:10px 20px;font-size:14px;cursor:pointer;}
+@media print{button{display:none}body{background:white}.page-container{box-shadow:none}}
 </style>
 </head>
 
 <body>
-
-<div id="report" class="box">
-<h2>التقرير الأسبوعي لمهارات نافس</h2>
-
-<label>الأسبوع</label>
-<input type="text">
-
-<label>المادة / المعلم</label>
-<input type="text">
-
-<label>المهارة المستهدفة</label>
-<input type="text">
-
-<label>أهداف الأسبوع</label>
-<textarea rows="3"></textarea>
-
-<label>ملاحظات عامة</label>
-<textarea rows="4"></textarea>
+<div id="report" class="page-container">
+<div class="header">
+<div>
+<h1>التقرير الأسبوعي لمهارات "نافس"</h1>
+<p style="font-size:13px;color:#64748b;">مدرسة أُحد المتوسطة | متابعة الأداء الفني</p>
+</div>
+<div class="badge">الأسبوع: <input type="text" style="width:60px;color:var(--gold);"></div>
 </div>
 
-<br>
-<button onclick="makePDF()">إصدار PDF</button>
+<div class="section-header">أولاً: بيانات التخطيط والتنفيذ</div>
+<table>
+<tr>
+<th>المادة / المعلم</th>
+<td><input></td>
+<th>المهارة المستهدفة</th>
+<td><input></td>
+</tr>
+<tr>
+<th>أهداف الأسبوع</th>
+<td colspan="3"><textarea></textarea></td>
+</tr>
+</table>
+
+<div class="section-header">ثانياً: التحليل الفني</div>
+<table>
+<tr>
+<th>نقاط القوة</th>
+<td><textarea></textarea></td>
+</tr>
+<tr>
+<th>التحديات</th>
+<td><textarea></textarea></td>
+</tr>
+<tr>
+<th>الإجراءات العلاجية</th>
+<td><textarea></textarea></td>
+</tr>
+</table>
+</div>
+
+<button onclick="makePDF()">📄 إصدار PDF</button>
 
 <script>
 function makePDF(){
-html2pdf().from(document.getElementById('report')).save('تقرير_نافس.pdf');
+html2pdf().set({
+margin:5,
+filename:'تقرير_نافس_الأسبوعي.pdf',
+image:{type:'jpeg',quality:0.98},
+html2canvas:{scale:2},
+jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
+}).from(document.getElementById('report')).save();
 }
 </script>
-
 </body>
 </html>
