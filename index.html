@@ -9,7 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-  <!-- PDF Export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
@@ -33,7 +32,6 @@
       print-color-adjust:exact;
     }
 
-    /* Toolbar */
     .topbar{
       max-width:210mm;
       margin:0 auto 12px auto;
@@ -53,15 +51,8 @@
       font-family:'Cairo',sans-serif;
       font-size:14px;
     }
-    .btn.secondary{
-      background:#fff;
-      color:var(--primary);
-    }
-    .note{
-      font-size:12px;
-      color:var(--muted);
-      margin-right:auto;
-    }
+    .btn.secondary{ background:#fff; color:var(--primary); }
+    .note{ font-size:12px; color:var(--muted); margin-right:auto; }
 
     .page-container{
       max-width:210mm;
@@ -72,7 +63,6 @@
       box-shadow:0 4px 15px rgba(0,0,0,.10);
     }
 
-    /* Header */
     .header{
       border-bottom:3px solid var(--gold);
       padding-bottom:10px;
@@ -114,7 +104,6 @@
       padding:0 2px;
     }
 
-    /* Section header */
     .section-header{
       background:#e2e8f0;
       padding:8px 10px;
@@ -130,18 +119,8 @@
       gap:10px;
     }
 
-    /* Tables */
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-bottom:10px;
-      font-size:13px;
-    }
-    th,td{
-      border:1px solid var(--border);
-      padding:8px;
-      vertical-align:top;
-    }
+    table{ width:100%; border-collapse:collapse; margin-bottom:10px; font-size:13px; }
+    th,td{ border:1px solid var(--border); padding:8px; vertical-align:top; }
     th{
       background-color:var(--primary);
       color:#fff;
@@ -150,7 +129,6 @@
       text-align:right;
     }
 
-    /* Inputs */
     input[type="text"], textarea{
       width:100%;
       border:none;
@@ -159,10 +137,7 @@
       font-size:13px;
       outline:none;
     }
-    input[type="text"]{
-      border-bottom:1px dashed #94a3b8;
-      padding:2px 0;
-    }
+    input[type="text"]{ border-bottom:1px dashed #94a3b8; padding:2px 0; }
     textarea{
       resize:none;
       min-height:52px;
@@ -172,13 +147,7 @@
       line-height:1.6;
     }
 
-    /* Checkboxes */
-    .checkbox-group{
-      display:flex;
-      gap:14px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+    .checkbox-group{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
     .checkbox-item{
       display:inline-flex;
       align-items:center;
@@ -191,7 +160,6 @@
       border:1px solid #e2e8f0;
     }
 
-    /* Stats */
     .stats-table th{
       text-align:center;
       background-color:#f8fafc;
@@ -199,17 +167,9 @@
       border-bottom:2px solid var(--gold);
       width:auto;
     }
-    .stats-table td{
-      text-align:center;
-      font-weight:900;
-    }
+    .stats-table td{ text-align:center; font-weight:900; }
 
-    /* Analysis grid */
-    .analysis-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-    }
+    .analysis-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     .analysis-box{
       border:1px solid var(--border);
       padding:10px;
@@ -224,7 +184,6 @@
       color:var(--primary);
     }
 
-    /* Evidence */
     .evidence-box{
       height:92px;
       border:2px dashed #cbd5e1;
@@ -238,19 +197,15 @@
       padding:10px;
       text-align:center;
     }
-    .hint{
-      font-size:11px;
-      color:var(--muted);
-      margin-top:6px;
-    }
+    .hint{ font-size:11px; color:var(--muted); margin-top:6px; }
 
-    /* Evidence images */
     .evidence-grid{
       display:grid;
       grid-template-columns:repeat(2, 1fr);
       gap:10px;
       margin-top:10px;
     }
+    .evidence-item{ position:relative; }
     .evidence-img{
       width:100%;
       height:160px;
@@ -258,7 +213,27 @@
       border:1px solid var(--border);
       border-radius:10px;
       background:#fff;
+      display:block;
     }
+    .remove-img-btn{
+      position:absolute;
+      top:8px;
+      left:8px;
+      z-index:5;              /* مهم */
+      background:var(--red-accent);
+      color:#fff;
+      border:none;
+      border-radius:50%;
+      width:26px;
+      height:26px;
+      font-weight:900;
+      cursor:pointer;
+      line-height:26px;
+      text-align:center;
+      box-shadow:0 2px 6px rgba(0,0,0,.25);
+    }
+    .remove-img-btn:hover{ background:#7f1d1d; }
+
     .evidence-link{
       direction:ltr;
       unicode-bidi:isolate;
@@ -269,26 +244,6 @@
       word-break:break-word;
     }
 
-    /* Remove image button */
-    .evidence-item{ position: relative; }
-    .remove-img-btn{
-      position:absolute;
-      top:6px;
-      left:6px;
-      background:var(--red-accent);
-      color:#fff;
-      border:none;
-      border-radius:50%;
-      width:24px;
-      height:24px;
-      font-weight:900;
-      cursor:pointer;
-      line-height:22px;
-      text-align:center;
-    }
-    .remove-img-btn:hover{ background:#7f1d1d; }
-
-    /* Critique */
     .critique-section{
       border:2px solid var(--red-accent);
       background:#fffafa;
@@ -303,11 +258,7 @@
       border-bottom:1px dashed var(--red-accent);
       padding-bottom:6px;
     }
-    .critique-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr;
-      gap:10px;
-    }
+    .critique-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
     .critique-card{
       border:1px solid #fecaca;
       background:#fff;
@@ -315,10 +266,9 @@
       padding:10px;
       font-size:12px;
     }
-    .critique-card strong{color:#7f1d1d}
-    .radio-line{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .critique-card strong{ color:#7f1d1d }
+    .radio-line{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px }
 
-    /* Signatures */
     .signatures{
       margin-top:26px;
       display:grid;
@@ -337,34 +287,31 @@
       margin-right:auto;
     }
 
-    /* Page break helpers */
-    .avoid-break{page-break-inside:avoid;break-inside:avoid}
+    .avoid-break{ page-break-inside:avoid; break-inside:avoid; }
 
-    /* Hide non-export blocks in print/pdf */
+    /* مهم: إخفاء مناطق الإدخال عند الطباعة */
     @media print{
-      body{background:#fff;padding:0}
-      .topbar{display:none !important}
-      .no-export{display:none !important}
-      .page-container{box-shadow:none;border-radius:0;padding:0}
-      th{background-color:var(--primary) !important;color:#fff !important}
-      .stats-table th{background-color:#f1f5f9 !important;color:#000 !important}
-      .section-header{background-color:#e2e8f0 !important}
-      input,textarea{border:none !important}
+      body{ background:#fff; padding:0 }
+      .topbar{ display:none !important }
+      .no-export{ display:none !important }
+      .page-container{ box-shadow:none; border-radius:0; padding:0 }
+      th{ background-color:var(--primary) !important; color:#fff !important }
+      .stats-table th{ background-color:#f1f5f9 !important; color:#000 !important }
+      .section-header{ background-color:#e2e8f0 !important }
+      input,textarea{ border:none !important }
     }
   </style>
 </head>
 
 <body>
-
   <div class="topbar">
     <button class="btn" onclick="exportPDF()">📄 إصدار PDF</button>
     <button class="btn secondary" onclick="window.print()">🖨️ طباعة</button>
-    <span class="note">إذا ما حدث تحديث للرابط، افتحه في نافذة خاصة أو أضف ?v=5</span>
+    <span class="note">بعد التحديث افتح الرابط بـ ?v=99 لتأكيد آخر نسخة</span>
   </div>
 
   <div id="report" class="page-container">
 
-    <!-- Header -->
     <div class="header avoid-break">
       <div class="header-title">
         <h1>التقرير الأسبوعي لمهارات "نافس"</h1>
@@ -373,7 +320,6 @@
       <div class="badge">الأسبوع: <input class="small-input" type="text" placeholder="1" /></div>
     </div>
 
-    <!-- 1 التخطيط -->
     <div class="section-header avoid-break">أولاً: بيانات التخطيط والتنفيذ</div>
     <table class="avoid-break">
       <tr>
@@ -403,7 +349,6 @@
       </tr>
     </table>
 
-    <!-- 2 الأداء -->
     <div class="section-header avoid-break">ثانياً: مستوى أداء الطلاب (نتائج الاختبار المحاكي)</div>
     <table class="stats-table avoid-break">
       <thead>
@@ -428,7 +373,6 @@
     </table>
     <div class="hint avoid-break">ملاحظة: يُفضّل أن يكون مجموع نسب مستويات الإتقان = 100%.</div>
 
-    <!-- 3 التحليل -->
     <div class="section-header">ثالثاً: التحليل الفني والتشخيص</div>
     <div class="analysis-grid">
       <div class="analysis-box avoid-break">
@@ -462,15 +406,14 @@
       </div>
     </div>
 
-    <!-- 4 الشواهد -->
     <div class="section-header avoid-break">رابعاً: الشواهد (توثيق العمل)</div>
 
-    <!-- Inputs (hidden in print/pdf) -->
-    <div class="no-export">
+    <!-- مهم: هذا الجزء لا يُطبع ولا يُصدر PDF -->
+    <div class="no-export" data-noexport="1">
       <div class="analysis-box avoid-break" style="margin-bottom:10px;">
         <span class="analysis-label">📷 رفع الشواهد (حتى 4 صور):</span>
         <input id="evidenceImages" type="file" accept="image/*" multiple />
-        <div class="hint">مسموح حتى 4 صور. بعد الرفع ستظهر المعاينة مع زر حذف لكل صورة.</div>
+        <div class="hint">بعد الرفع ستظهر المعاينة مع زر حذف لكل صورة (×).</div>
       </div>
 
       <div class="analysis-box avoid-break" style="margin-bottom:10px;">
@@ -480,13 +423,12 @@
       </div>
     </div>
 
-    <!-- Preview (will be exported) -->
+    <!-- هذا الجزء يظهر في الصفحة + يدخل في PDF -->
     <div id="evidencePreview" class="avoid-break">
       <div class="evidence-box">(بعد رفع الصور ستظهر هنا داخل التقرير)</div>
     </div>
     <div id="evidenceLinkPreview" class="hint avoid-break" style="margin-top:8px;"></div>
 
-    <!-- 5 النقد -->
     <div class="critique-section">
       <div class="critique-header">🔴 خامساً: استمارة النقد الفني للاختبار (خاص بالمشرف التربوي)</div>
 
@@ -524,20 +466,10 @@
       </div>
     </div>
 
-    <!-- التوقيعات -->
     <div class="signatures avoid-break">
-      <div>
-        <strong>معلم المادة</strong>
-        <div class="sig-line"></div>
-      </div>
-      <div>
-        <strong>قائد الفريق (الفصل)</strong>
-        <div class="sig-line"></div>
-      </div>
-      <div>
-        <strong>المشرف التربوي</strong>
-        <div class="sig-line"></div>
-      </div>
+      <div><strong>معلم المادة</strong><div class="sig-line"></div></div>
+      <div><strong>قائد الفريق (الفصل)</strong><div class="sig-line"></div></div>
+      <div><strong>المشرف التربوي</strong><div class="sig-line"></div></div>
       <div>
         <strong>مدير المدرسة</strong><br>
         <span style="color:var(--primary);font-weight:900;">ناصر حسين ال زبيد</span>
@@ -558,7 +490,7 @@
       t.addEventListener("input", ()=>autoGrow(t));
     });
 
-    // ===== Evidence (Images + Link) =====
+    // ===== Evidence =====
     let evidenceDataUrls = [];
     const imgInput = document.getElementById("evidenceImages");
     const linkInput = document.getElementById("evidenceLink");
@@ -572,36 +504,37 @@
       return "https://" + u;
     }
 
-    function removeEvidenceImage(index){
-      evidenceDataUrls.splice(index, 1);
-      // إذا حذف آخر صورة، نفرغ input file حتى يسمح يرفع نفس الصورة مرة ثانية
-      if (imgInput) imgInput.value = "";
-      renderEvidencePreview();
-    }
-
     function renderEvidencePreview(){
-      // images
       if (!evidenceDataUrls.length) {
         preview.innerHTML = `<div class="evidence-box">(بعد رفع الصور ستظهر هنا داخل التقرير)</div>`;
       } else {
         const imgsHtml = evidenceDataUrls.map((u, i) => `
           <div class="evidence-item">
-            <button class="remove-img-btn" type="button" onclick="removeEvidenceImage(${i})">×</button>
+            <button class="remove-img-btn" type="button" data-remove-index="${i}" aria-label="حذف الصورة">×</button>
             <img class="evidence-img" src="${u}" alt="شاهد" />
           </div>
         `).join("");
         preview.innerHTML = `<div class="evidence-grid">${imgsHtml}</div>`;
       }
 
-      // link
       const safe = normalizeUrl(linkInput ? linkInput.value : "");
       if (safe) {
-        linkPreview.innerHTML =
-          `رابط الشاهد: <a class="evidence-link" dir="ltr" href="${safe}" target="_blank" rel="noopener">${safe}</a>`;
+        linkPreview.innerHTML = `رابط الشاهد: <a class="evidence-link" dir="ltr" href="${safe}" target="_blank" rel="noopener">${safe}</a>`;
       } else {
         linkPreview.innerHTML = "";
       }
     }
+
+    // ✅ Event Delegation للحذف (مضمون)
+    preview.addEventListener("click", (e) => {
+      const btn = e.target.closest(".remove-img-btn");
+      if (!btn) return;
+      const idx = Number(btn.getAttribute("data-remove-index"));
+      if (Number.isNaN(idx)) return;
+      evidenceDataUrls.splice(idx, 1);
+      if (imgInput) imgInput.value = ""; // يسمح بإعادة رفع نفس الصورة
+      renderEvidencePreview();
+    });
 
     if (imgInput) {
       imgInput.addEventListener("change", async (e) => {
@@ -627,16 +560,16 @@
 
     renderEvidencePreview();
 
-    // Create static clone for PERFECT pdf (inputs/checkboxes -> text)
+    // ===== PDF Export =====
     function createStaticCloneForPDF(){
       const report = document.getElementById("report");
       const clone = report.cloneNode(true);
 
-      // Remove blocks that should not appear in PDF
-      clone.querySelectorAll('.no-export').forEach(el => el.remove());
+      // ✅ احذف كل مناطق الإدخال
+      clone.querySelectorAll(".no-export,[data-noexport='1']").forEach(el => el.remove());
 
-      // Remove file inputs so fakepath never appears (extra safety)
-      clone.querySelectorAll('input[type="file"]').forEach(el => el.remove());
+      // ✅ احذف أي input file احتياط
+      clone.querySelectorAll("input[type='file']").forEach(el => el.remove());
 
       // text inputs
       clone.querySelectorAll('input[type="text"]').forEach(inp=>{
@@ -672,6 +605,9 @@
         cb.replaceWith(mark);
       });
 
+      // ✅ احذف أزرار الحذف من نسخة الـPDF (يبقى الصور فقط)
+      clone.querySelectorAll(".remove-img-btn").forEach(b => b.remove());
+
       return clone;
     }
 
@@ -698,6 +634,5 @@
       document.body.removeChild(temp);
     }
   </script>
-
 </body>
 </html>
