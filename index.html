@@ -269,6 +269,25 @@
       word-break:break-word;
     }
 
+    /* Remove image button */
+    .evidence-item{ position: relative; }
+    .remove-img-btn{
+      position:absolute;
+      top:6px;
+      left:6px;
+      background:var(--red-accent);
+      color:#fff;
+      border:none;
+      border-radius:50%;
+      width:24px;
+      height:24px;
+      font-weight:900;
+      cursor:pointer;
+      line-height:22px;
+      text-align:center;
+    }
+    .remove-img-btn:hover{ background:#7f1d1d; }
+
     /* Critique */
     .critique-section{
       border:2px solid var(--red-accent);
@@ -321,7 +340,7 @@
     /* Page break helpers */
     .avoid-break{page-break-inside:avoid;break-inside:avoid}
 
-    /* Hide non-export blocks in print */
+    /* Hide non-export blocks in print/pdf */
     @media print{
       body{background:#fff;padding:0}
       .topbar{display:none !important}
@@ -340,7 +359,7 @@
   <div class="topbar">
     <button class="btn" onclick="exportPDF()">📄 إصدار PDF</button>
     <button class="btn secondary" onclick="window.print()">🖨️ طباعة</button>
-    <span class="note">إذا ما حدث تحديث للرابط، افتحه في نافذة خاصة أو أضف ?v=2</span>
+    <span class="note">إذا ما حدث تحديث للرابط، افتحه في نافذة خاصة أو أضف ?v=5</span>
   </div>
 
   <div id="report" class="page-container">
@@ -451,13 +470,13 @@
       <div class="analysis-box avoid-break" style="margin-bottom:10px;">
         <span class="analysis-label">📷 رفع الشواهد (حتى 4 صور):</span>
         <input id="evidenceImages" type="file" accept="image/*" multiple />
-        <div class="hint">مسموح حتى 4 صور. الأفضل صور واضحة وصغيرة الحجم.</div>
+        <div class="hint">مسموح حتى 4 صور. بعد الرفع ستظهر المعاينة مع زر حذف لكل صورة.</div>
       </div>
 
       <div class="analysis-box avoid-break" style="margin-bottom:10px;">
         <span class="analysis-label">🔗 رابط شاهد (اختياري):</span>
         <input id="evidenceLink" type="text" placeholder="ضع رابط الشاهد هنا (Drive/Forms/YouTube/...)" />
-        <div class="hint">سيظهر الرابط داخل التقرير ويمكن فتحه.</div>
+        <div class="hint">إذا كتبت الرابط بدون https سيتم إضافته تلقائياً.</div>
       </div>
     </div>
 
@@ -553,12 +572,24 @@
       return "https://" + u;
     }
 
+    function removeEvidenceImage(index){
+      evidenceDataUrls.splice(index, 1);
+      // إذا حذف آخر صورة، نفرغ input file حتى يسمح يرفع نفس الصورة مرة ثانية
+      if (imgInput) imgInput.value = "";
+      renderEvidencePreview();
+    }
+
     function renderEvidencePreview(){
       // images
       if (!evidenceDataUrls.length) {
         preview.innerHTML = `<div class="evidence-box">(بعد رفع الصور ستظهر هنا داخل التقرير)</div>`;
       } else {
-        const imgsHtml = evidenceDataUrls.map(u => `<img class="evidence-img" src="${u}" alt="شاهد" />`).join("");
+        const imgsHtml = evidenceDataUrls.map((u, i) => `
+          <div class="evidence-item">
+            <button class="remove-img-btn" type="button" onclick="removeEvidenceImage(${i})">×</button>
+            <img class="evidence-img" src="${u}" alt="شاهد" />
+          </div>
+        `).join("");
         preview.innerHTML = `<div class="evidence-grid">${imgsHtml}</div>`;
       }
 
@@ -601,7 +632,10 @@
       const report = document.getElementById("report");
       const clone = report.cloneNode(true);
 
-      // Remove file inputs so fakepath never appears
+      // Remove blocks that should not appear in PDF
+      clone.querySelectorAll('.no-export').forEach(el => el.remove());
+
+      // Remove file inputs so fakepath never appears (extra safety)
       clone.querySelectorAll('input[type="file"]').forEach(el => el.remove());
 
       // text inputs
