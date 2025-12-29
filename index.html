@@ -1,90 +1,580 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>التقرير الأسبوعي الشامل - نافس 662</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>التقرير الأسبوعي الشامل - نافس 662</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
-<style>
-:root{
---primary:#0f172a;
---gold:#f59e0b;
---red:#b91c1c;
---green:#15803d;
---border:#cbd5e1;
-}
-body{font-family:'Cairo',sans-serif;background:#f1f5f9;margin:0;padding:20px;color:#334155;}
-.page-container{max-width:210mm;margin:auto;background:white;padding:25px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.1);}
-.header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--gold);padding-bottom:10px;margin-bottom:20px;}
-.header h1{margin:0;font-size:22px;font-weight:900;color:var(--primary);}
-.badge{background:var(--primary);color:var(--gold);padding:6px 14px;border-radius:50px;font-size:12px;font-weight:bold;}
-.section-header{background:#e2e8f0;padding:6px 10px;margin:15px 0 8px;font-weight:700;font-size:14px;border-right:4px solid var(--primary);}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-th,td{border:1px solid var(--border);padding:8px;}
-th{background:var(--primary);color:white;width:20%;}
-input, textarea{width:100%;border:none;background:transparent;font-family:'Cairo';font-size:13px;outline:none;}
-textarea{resize:none;height:60px;border-bottom:1px dashed #94a3b8;}
-button{margin-top:20px;background:var(--primary);color:white;border:none;padding:10px 20px;font-size:14px;cursor:pointer;}
-@media print{button{display:none}body{background:white}.page-container{box-shadow:none}}
-</style>
+  <!-- PDF Export lib -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #0f172a;     /* كحلي */
+      --gold: #f59e0b;        /* ذهبي */
+      --red-accent: #b91c1c;  /* أحمر */
+      --green-accent: #15803d;/* أخضر */
+      --border: #cbd5e1;
+      --muted: #64748b;
+      --bg: #f1f5f9;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 16px;
+      color: #334155;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .topbar {
+      max-width: 210mm;
+      margin: 0 auto 12px auto;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: 1px solid var(--primary);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Cairo', sans-serif;
+      font-size: 14px;
+    }
+    .btn.secondary{
+      background:#fff;
+      color: var(--primary);
+    }
+
+    .page-container {
+      max-width: 210mm;
+      margin: 0 auto;
+      background: #fff;
+      padding: 22px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.10);
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 3px solid var(--gold);
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-title h1 {
+      color: var(--primary);
+      margin: 0;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+    .header-title p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .badge {
+      background: var(--primary);
+      color: var(--gold);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 12px;
+      border: 1px solid var(--gold);
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Section Headers */
+    .section-header {
+      background: #e2e8f0;
+      padding: 8px 10px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--primary);
+      border-right: 4px solid var(--primary);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: var(--primary);
+      color: #fff;
+      width: 20%;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    /* Inputs */
+    input[type="text"], textarea {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: 'Cairo', sans-serif;
+      font-size: 13px;
+      outline: none;
+    }
+
+    input[type="text"]{
+      border-bottom: 1px dashed #94a3b8;
+      padding: 2px 0;
+    }
+
+    textarea {
+      resize: none;
+      min-height: 52px;
+      border-bottom: 1px dashed #94a3b8;
+      padding-top: 2px;
+      overflow: hidden;
+    }
+
+    .small-input{
+      width: 70px !important;
+      color: var(--gold);
+      border-bottom: 1px dashed rgba(255,255,255,0.5);
+    }
+
+    /* Performance Stats */
+    .stats-table th {
+      text-align: center;
+      background-color: #f8fafc;
+      color: var(--primary);
+      border-bottom: 2px solid var(--gold);
+      width: auto;
+    }
+    .stats-table td { text-align: center; font-weight: 800; }
+
+    /* Analysis Grid */
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .analysis-box {
+      border: 1px solid var(--border);
+      padding: 10px;
+      border-radius: 6px;
+      background: #fff;
+    }
+    .analysis-label {
+      font-weight: 900;
+      font-size: 12px;
+      margin-bottom: 6px;
+      display: block;
+      color: var(--primary);
+    }
+
+    /* Checkboxes */
+    .checkbox-group {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .checkbox-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color:#0f172a;
+      padding: 4px 6px;
+      border-radius: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Critique Section */
+    .critique-section {
+      border: 2px solid var(--red-accent);
+      background: #fffafa;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 14px;
+    }
+    .critique-header {
+      color: var(--red-accent);
+      font-weight: 900;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed var(--red-accent);
+      padding-bottom: 6px;
+    }
+    .critique-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+    .critique-card{
+      border:1px solid #fecaca;
+      background:#fff;
+      border-radius:10px;
+      padding:10px;
+      font-size:12px;
+    }
+    .critique-card strong{ color:#7f1d1d; }
+    .radio-line{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+
+    /* Evidence box */
+    .evidence-box {
+      height: 92px;
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 12px;
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+    .hint {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* Signatures */
+    .signatures {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      text-align: center;
+      font-size: 12px;
+      border-top: 1px solid #cbd5e1;
+      padding-top: 16px;
+    }
+    .sig-line {
+      margin-top: 26px;
+      border-bottom: 1px dotted #0f172a;
+      width: 85%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Page breaks for print/pdf */
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+    .avoid-break {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Print override */
+    @media print {
+      body { background: #fff; padding: 0; }
+      .topbar { display: none !important; }
+      .page-container { box-shadow: none; border-radius: 0; padding: 0; }
+      th { background-color: var(--primary) !important; color: #fff !important; }
+      .stats-table th { background-color: #f1f5f9 !important; color: #000 !important; }
+      .section-header { background-color: #e2e8f0 !important; }
+      input, textarea { border: none !important; }
+    }
+  </style>
 </head>
 
 <body>
-<div id="report" class="page-container">
-<div class="header">
-<div>
-<h1>التقرير الأسبوعي لمهارات "نافس"</h1>
-<p style="font-size:13px;color:#64748b;">مدرسة أُحد المتوسطة | متابعة الأداء الفني</p>
-</div>
-<div class="badge">الأسبوع: <input type="text" style="width:60px;color:var(--gold);"></div>
-</div>
 
-<div class="section-header">أولاً: بيانات التخطيط والتنفيذ</div>
-<table>
-<tr>
-<th>المادة / المعلم</th>
-<td><input></td>
-<th>المهارة المستهدفة</th>
-<td><input></td>
-</tr>
-<tr>
-<th>أهداف الأسبوع</th>
-<td colspan="3"><textarea></textarea></td>
-</tr>
-</table>
+  <!-- Buttons -->
+  <div class="topbar">
+    <button class="btn" onclick="exportPDF()">📄 إصدار PDF</button>
+    <button class="btn secondary" onclick="window.print()">🖨️ طباعة</button>
+  </div>
 
-<div class="section-header">ثانياً: التحليل الفني</div>
-<table>
-<tr>
-<th>نقاط القوة</th>
-<td><textarea></textarea></td>
-</tr>
-<tr>
-<th>التحديات</th>
-<td><textarea></textarea></td>
-</tr>
-<tr>
-<th>الإجراءات العلاجية</th>
-<td><textarea></textarea></td>
-</tr>
-</table>
-</div>
+  <!-- Report -->
+  <div id="report" class="page-container">
 
-<button onclick="makePDF()">📄 إصدار PDF</button>
+    <!-- Header -->
+    <div class="header avoid-break">
+      <div class="header-title">
+        <h1>التقرير الأسبوعي لمهارات "نافس"</h1>
+        <p>مدرسة أُحد المتوسطة | متابعة الأداء الفني (المهمة 662)</p>
+      </div>
+      <div class="badge">
+        الأسبوع:
+        <input class="small-input" type="text" placeholder="مثال: 1" />
+      </div>
+    </div>
 
-<script>
-function makePDF(){
-html2pdf().set({
-margin:5,
-filename:'تقرير_نافس_الأسبوعي.pdf',
-image:{type:'jpeg',quality:0.98},
-html2canvas:{scale:2},
-jsPDF:{unit:'mm',format:'a4',orientation:'portrait'}
-}).from(document.getElementById('report')).save();
-}
-</script>
+    <!-- 1. التخطيط -->
+    <div class="section-header avoid-break">أولاً: بيانات التخطيط والتنفيذ</div>
+    <table class="avoid-break">
+      <tr>
+        <th>المادة / المعلم</th>
+        <td><input type="text" placeholder="مثال: لغتي / أ. محمد" maxlength="60"></td>
+        <th>المهارة المستهدفة</th>
+        <td><input type="text" placeholder="اكتب المهارة بدقة..." maxlength="90"></td>
+      </tr>
+      <tr>
+        <th>أهداف الأسبوع</th>
+        <td colspan="3"><textarea placeholder="ما الذي يجب أن يتقنه الطالب بنهاية الأسبوع؟" maxlength="350"></textarea></td>
+      </tr>
+      <tr>
+        <th>آليات التنفيذ</th>
+        <td colspan="3">
+          <div class="checkbox-group">
+            <label class="checkbox-item"><input type="checkbox"> شرح استراتيجية "أنت المعلم"</label>
+            <label class="checkbox-item"><input type="checkbox"> تفعيل "تذكرة العبور"</label>
+            <label class="checkbox-item"><input type="checkbox"> اختبارات محاكية</label>
+            <label class="checkbox-item"><input type="checkbox"> تدريب الأقران (السفراء)</label>
+            <label class="checkbox-item">
+              <input type="checkbox"> أخرى:
+              <input type="text" placeholder="اكتب..." maxlength="40" style="width:140px;border-bottom:1px dashed #94a3b8;">
+            </label>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- 2. الأداء الرقمي -->
+    <div class="section-header avoid-break">ثانياً: مستوى أداء الطلاب (نتائج الاختبار المحاكي)</div>
+    <table class="stats-table avoid-break">
+      <thead>
+        <tr>
+          <th rowspan="2" style="vertical-align: middle;">عدد الطلاب المختبرين</th>
+          <th colspan="3">مستوى الإتقان (بحسب الدرجات)</th>
+        </tr>
+        <tr>
+          <th style="color: var(--green-accent);">مرتفع (90-100%)</th>
+          <th style="color: #d97706;">متوسط (70-89%)</th>
+          <th style="color: var(--red-accent);">ضعيف (أقل من 70%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="text" style="text-align:center" placeholder="العدد" maxlength="4"></td>
+          <td><input type="text" style="text-align:center" placeholder="النسبة %" maxlength="5"></td>
+          <td><input type="text" style="text-align:center" placeholder="النسبة %" maxlength="5"></td>
+          <td><input type="text" style="text-align:center" placeholder="النسبة %" maxlength="5"></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="hint avoid-break">ملاحظة: يُفضّل أن يكون مجموع نسب مستويات الإتقان = 100%.</div>
+
+    <!-- 3. التحليل النوعي -->
+    <div class="section-header">ثالثاً: التحليل الفني والتشخيص</div>
+    <div class="analysis-grid">
+      <div class="analysis-box avoid-break">
+        <span class="analysis-label" style="color: var(--green-accent);">✔ أبرز نقاط القوة:</span>
+        <textarea placeholder="ما الذي تميز فيه الطلاب هذا الأسبوع؟" maxlength="300"></textarea>
+      </div>
+
+      <div class="analysis-box avoid-break">
+        <span class="analysis-label" style="color: var(--red-accent);">✖ أبرز التحديات والصعوبات:</span>
+        <textarea placeholder="ما هي العقبات التي واجهت تحقيق المهارة؟" maxlength="300"></textarea>
+      </div>
+
+      <div class="analysis-box avoid-break">
+        <span class="analysis-label" style="color: #d97706;">🛠 الإجراءات العلاجية المنفذة:</span>
+        <textarea placeholder="كيف تعاملت مع الطلاب المتعثرين؟" maxlength="300"></textarea>
+      </div>
+
+      <div class="analysis-box avoid-break">
+        <span class="analysis-label">💡 التوصيات للأسبوع القادم:</span>
+        <textarea placeholder="مقترحات للتحسين (SMART قدر الإمكان)..." maxlength="300"></textarea>
+      </div>
+
+      <div class="analysis-box avoid-break" style="grid-column: 1 / -1;">
+        <span class="analysis-label">📌 أثر الإجراءات على النتائج:</span>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox"> تحسن</label>
+          <label class="checkbox-item"><input type="checkbox"> ثبات</label>
+          <label class="checkbox-item"><input type="checkbox"> تراجع</label>
+          <label class="checkbox-item">ملاحظة مختصرة: <input type="text" maxlength="80" style="width:220px;border-bottom:1px dashed #94a3b8;"></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. الشواهد -->
+    <div class="section-header avoid-break">رابعاً: الشواهد (توثيق العمل)</div>
+    <div class="evidence-box avoid-break">
+      (مساحة للصق صور من نماذج الاختبارات، تذاكر العبور، أو صور السبورة)
+    </div>
+    <div class="hint avoid-break">عدد الشواهد المرفقة: ☐ 1 ☐ 2 ☐ 3 ☐ أكثر</div>
+
+    <!-- 5. النقد والتجويد -->
+    <div class="critique-section">
+      <div class="critique-header">🔴 خامساً: استمارة النقد الفني للاختبار (خاص بالمشرف التربوي)</div>
+
+      <div class="critique-grid avoid-break">
+        <div class="critique-card">
+          <strong>1) استهداف المهارة</strong>
+          <div class="radio-line">
+            <label><input type="checkbox"> نعم</label>
+            <label><input type="checkbox"> إلى حد ما</label>
+            <label><input type="checkbox"> لا</label>
+          </div>
+        </div>
+
+        <div class="critique-card">
+          <strong>2) كفاية المهام</strong>
+          <div class="radio-line">
+            <label><input type="checkbox"> كافية</label>
+            <label><input type="checkbox"> تحتاج زيادة</label>
+          </div>
+        </div>
+
+        <div class="critique-card">
+          <strong>3) نمط الأسئلة</strong>
+          <div class="radio-line">
+            <label><input type="checkbox"> تحاكي نافس (استنتاجية)</label>
+            <label><input type="checkbox"> تعتمد الحفظ</label>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:10px" class="avoid-break">
+        <div style="font-weight:900;font-size:13px;color:#7f1d1d;">✍ الرأي الفني للمشرف التربوي:</div>
+        <textarea placeholder="ملاحظات دقيقة قابلة للتنفيذ..." style="width:100%;min-height:70px;background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px;"></textarea>
+        <div class="hint">يعتمد هذا التقرير كجزء من توثيق متابعة المهارات وفق خطة تحسين نواتج التعلم.</div>
+      </div>
+    </div>
+
+    <!-- Signatures -->
+    <div class="signatures avoid-break">
+      <div>
+        <strong>معلم المادة</strong>
+        <div class="sig-line"></div>
+      </div>
+      <div>
+        <strong>قائد الفريق (الفصل)</strong>
+        <div class="sig-line"></div>
+      </div>
+      <div>
+        <strong>المشرف التربوي</strong>
+        <div class="sig-line"></div>
+      </div>
+      <div>
+        <strong>مدير المدرسة</strong><br>
+        <span style="color: var(--primary); font-weight: 900;">ناصر حسين ال زبيد</span>
+        <div class="sig-line" style="margin-top: 14px;"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Auto-grow textareas so print/pdf doesn't cut text visually
+    function autoGrow(el){
+      el.style.height = "auto";
+      el.style.height = (el.scrollHeight + 2) + "px";
+    }
+    document.querySelectorAll("textarea").forEach(t => {
+      autoGrow(t);
+      t.addEventListener("input", () => autoGrow(t));
+    });
+
+    // Convert form fields into static text for PERFECT PDF export
+    function createStaticCloneForPDF() {
+      const report = document.getElementById("report");
+      const clone = report.cloneNode(true);
+
+      // Replace inputs
+      clone.querySelectorAll('input[type="text"]').forEach(inp => {
+        const v = (inp.value || inp.getAttribute("placeholder") || "").trim();
+        const span = document.createElement("div");
+        span.textContent = v;
+        span.style.minHeight = "18px";
+        span.style.borderBottom = "1px dashed #cbd5e1";
+        span.style.padding = "2px 0";
+        span.style.whiteSpace = "pre-wrap";
+        inp.replaceWith(span);
+      });
+
+      // Replace textareas
+      clone.querySelectorAll("textarea").forEach(ta => {
+        const v = (ta.value || ta.getAttribute("placeholder") || "").trim();
+        const div = document.createElement("div");
+        div.textContent = v;
+        div.style.minHeight = "52px";
+        div.style.borderBottom = "1px dashed #cbd5e1";
+        div.style.padding = "2px 0";
+        div.style.whiteSpace = "pre-wrap";
+        div.style.lineHeight = "1.6";
+        ta.replaceWith(div);
+      });
+
+      // Replace checkboxes with symbols
+      clone.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        const mark = document.createElement("span");
+        mark.textContent = cb.checked ? "☑" : "☐";
+        mark.style.fontWeight = "900";
+        mark.style.marginLeft = "6px";
+        cb.replaceWith(mark);
+      });
+
+      return clone;
+    }
+
+    async function exportPDF(){
+      const clone = createStaticCloneForPDF();
+
+      // Put clone into temp container (offscreen) for rendering
+      const temp = document.createElement("div");
+      temp.style.position = "fixed";
+      temp.style.left = "-99999px";
+      temp.style.top = "0";
+      temp.style.width = "210mm";
+      temp.appendChild(clone);
+      document.body.appendChild(temp);
+
+      // Export
+      await html2pdf().set({
+        margin: [8, 8, 8, 8],
+        filename: "تقرير_نافس_662.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] }
+      }).from(clone).save();
+
+      // Cleanup
+      document.body.removeChild(temp);
+    }
+  </script>
+
 </body>
 </html>
