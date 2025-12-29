@@ -244,7 +244,7 @@
       margin-top:6px;
     }
 
-    /* NEW: evidence images grid */
+    /* Evidence images */
     .evidence-grid{
       display:grid;
       grid-template-columns:repeat(2, 1fr);
@@ -260,12 +260,13 @@
       background:#fff;
     }
     .evidence-link{
-      display:inline-block;
       direction:ltr;
-      unicode-bidi: plaintext;
+      unicode-bidi:isolate;
+      display:inline-block;
       color:#1d4ed8;
       text-decoration:underline;
       font-weight:800;
+      word-break:break-word;
     }
 
     /* Critique */
@@ -320,10 +321,11 @@
     /* Page break helpers */
     .avoid-break{page-break-inside:avoid;break-inside:avoid}
 
-    /* Print */
+    /* Hide non-export blocks in print */
     @media print{
       body{background:#fff;padding:0}
       .topbar{display:none !important}
+      .no-export{display:none !important}
       .page-container{box-shadow:none;border-radius:0;padding:0}
       th{background-color:var(--primary) !important;color:#fff !important}
       .stats-table th{background-color:#f1f5f9 !important;color:#000 !important}
@@ -441,21 +443,25 @@
       </div>
     </div>
 
-    <!-- 4 الشواهد (جديد: رفع صور + رابط) -->
+    <!-- 4 الشواهد -->
     <div class="section-header avoid-break">رابعاً: الشواهد (توثيق العمل)</div>
 
-    <div class="analysis-box avoid-break" style="margin-bottom:10px;">
-      <span class="analysis-label">📷 رفع الشواهد (حتى 4 صور):</span>
-      <input id="evidenceImages" type="file" accept="image/*" multiple />
-      <div class="hint">مسموح حتى 4 صور. الأفضل صور واضحة وصغيرة الحجم.</div>
+    <!-- Inputs (hidden in print/pdf) -->
+    <div class="no-export">
+      <div class="analysis-box avoid-break" style="margin-bottom:10px;">
+        <span class="analysis-label">📷 رفع الشواهد (حتى 4 صور):</span>
+        <input id="evidenceImages" type="file" accept="image/*" multiple />
+        <div class="hint">مسموح حتى 4 صور. الأفضل صور واضحة وصغيرة الحجم.</div>
+      </div>
+
+      <div class="analysis-box avoid-break" style="margin-bottom:10px;">
+        <span class="analysis-label">🔗 رابط شاهد (اختياري):</span>
+        <input id="evidenceLink" type="text" placeholder="ضع رابط الشاهد هنا (Drive/Forms/YouTube/...)" />
+        <div class="hint">سيظهر الرابط داخل التقرير ويمكن فتحه.</div>
+      </div>
     </div>
 
-    <div class="analysis-box avoid-break" style="margin-bottom:10px;">
-      <span class="analysis-label">🔗 رابط شاهد (اختياري):</span>
-      <input id="evidenceLink" type="text" placeholder="ضع رابط الشاهد هنا (Drive/Forms/YouTube/...)" />
-      <div class="hint">سيظهر الرابط داخل التقرير ويمكن فتحه.</div>
-    </div>
-
+    <!-- Preview (will be exported) -->
     <div id="evidencePreview" class="avoid-break">
       <div class="evidence-box">(بعد رفع الصور ستظهر هنا داخل التقرير)</div>
     </div>
@@ -534,11 +540,18 @@
     });
 
     // ===== Evidence (Images + Link) =====
-    let evidenceDataUrls = []; // for PDF export
+    let evidenceDataUrls = [];
     const imgInput = document.getElementById("evidenceImages");
     const linkInput = document.getElementById("evidenceLink");
     const preview = document.getElementById("evidencePreview");
     const linkPreview = document.getElementById("evidenceLinkPreview");
+
+    function normalizeUrl(raw){
+      const u = (raw || "").trim();
+      if (!u) return "";
+      if (u.startsWith("http://") || u.startsWith("https://")) return u;
+      return "https://" + u;
+    }
 
     function renderEvidencePreview(){
       // images
@@ -550,9 +563,10 @@
       }
 
       // link
-      const url = (linkInput.value || "").trim();
-      if (url) {
-        linkPreview.innerHTML = `رابط الشاهد: <a class="evidence-link" href="${url}" target="_blank" rel="noopener">${url}</a>`;
+      const safe = normalizeUrl(linkInput ? linkInput.value : "");
+      if (safe) {
+        linkPreview.innerHTML =
+          `رابط الشاهد: <a class="evidence-link" dir="ltr" href="${safe}" target="_blank" rel="noopener">${safe}</a>`;
       } else {
         linkPreview.innerHTML = "";
       }
@@ -560,7 +574,7 @@
 
     if (imgInput) {
       imgInput.addEventListener("change", async (e) => {
-        const files = Array.from(e.target.files || []).slice(0, 4); // max 4
+        const files = Array.from(e.target.files || []).slice(0, 4);
         evidenceDataUrls = [];
 
         for (const f of files) {
@@ -579,12 +593,16 @@
     if (linkInput) {
       linkInput.addEventListener("input", () => renderEvidencePreview());
     }
+
     renderEvidencePreview();
 
     // Create static clone for PERFECT pdf (inputs/checkboxes -> text)
     function createStaticCloneForPDF(){
       const report = document.getElementById("report");
       const clone = report.cloneNode(true);
+
+      // Remove file inputs so fakepath never appears
+      clone.querySelectorAll('input[type="file"]').forEach(el => el.remove());
 
       // text inputs
       clone.querySelectorAll('input[type="text"]').forEach(inp=>{
